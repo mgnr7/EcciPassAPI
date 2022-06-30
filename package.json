@@ -1,0 +1,30 @@
+{
+  "name": "eccipassapi",
+  "version": "1.0.0",
+  "description": "API para el proyecto EcciPass",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mgnr7/EcciPassAPI.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mgnr7/EcciPassAPI/issues"
+  },
+  "homepage": "https://github.com/mgnr7/EcciPassAPI#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "mysql": "^2.18.1",
+    "nodemailer": "^6.7.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.18"
+  }
+}
