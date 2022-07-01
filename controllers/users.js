@@ -4,6 +4,10 @@ const { sendRecoveryCodeEmail } = require("../services/mailService");
 
 const saltRounds = 10;
 
+exports.userWelcome = (req, res) => {
+  res.send("Welcome");
+};
+
 exports.createUser = (req, res) => {
   const userPayload = req.body;
 };

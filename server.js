@@ -9,6 +9,9 @@ connectDb();
 
 /*Se montan las rutas*/
 server.use("/users", userRoutes);
-server.use("/devices", devicesRoutes);
+//server.use("/devices", devicesRoutes);
 
 server.listen(process.env.PORT || 7500);
+console.log(
+  `The server is running at http://localhost:${process.env.PORT || 7500}`
+);

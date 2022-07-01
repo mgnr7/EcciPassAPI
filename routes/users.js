@@ -1,5 +1,6 @@
 const express = require("express");
 const {
+  userWelcome,
   createUser,
   loginUser,
   recoverPassword,
@@ -8,7 +9,9 @@ const {
 
 const router = express.Router();
 
-router.route.post(createUser);
+router.route("/").get(userWelcome);
+
+router.route("/").post(createUser);
 
 router.route("/login").post(loginUser);
 
