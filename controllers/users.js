@@ -43,9 +43,8 @@ exports.loginUser = (req, res) => {
 
     //Sacar los roles del usuario
     const roles = userRoles.find((ur) => ur.userId === user.userId);
-
     const token = jwt.sign(
-      { userId: user.id, roles: roles.roleID },
+      { userId: user.userId, roles: roles.roleID },
       process.env.JWT_KEY,
       { expiresIn: "5m" }
     );

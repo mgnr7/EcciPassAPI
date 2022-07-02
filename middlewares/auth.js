@@ -1,4 +1,7 @@
 const jwt = require("jsonwebtoken");
+const { roles } = require("../utils/testData");
+let { usersList } = require("../utils/testData");
+let { userRoles } = require("../utils/testData");
 
 exports.userIsAuthenticated = (req, res, next) => {
   if (req.headers && req.headers.authorization) {
@@ -7,19 +10,16 @@ exports.userIsAuthenticated = (req, res, next) => {
       try {
         //Verificar que el token se genero con nuestra llave privada
         const decryptedToken = jwt.verify(token, process.env.JWT_KEY);
-        /*const sqlQuery = `SELECT * FROM test.Users WHERE id = '${decryptedToken.userId}';`;
-                const query = getQuery();
-                const result = await query(sqlQuery);
-                if (!result || !result[0]) {
-                    res.status(401).json({
-                        error: true,
-                        message: "Las credenciales brindadas no son válidas."
-                    });
-                }
-                else {
-                    req.user = decryptedToken;
-                    next();
-                }*/
+        const user = usersList.find((u) => u.userId === decryptedToken.userId);
+        if (!user) {
+          res.status(401).json({
+            error: true,
+            message: "Las credenciales brindadas no son válidas.",
+          });
+        } else {
+          req.user = decryptedToken;
+          next();
+        }
       } catch (error) {
         res.status(401).json({
           error: true,
