@@ -2,6 +2,16 @@ let { usersList } = require("../utils/testData");
 let { userRoles } = require("../utils/testData");
 let { devicesList } = require("../utils/testData");
 
+exports.listDevices = (req, res) => {
+  try {
+    const result = devicesList;
+    res.json(result);
+  } catch (error) {
+    res.status(500).send("Server error: " + error);
+  }
+};
+
+//Retorna los dispositivos asociados a un usuario comun especifico
 exports.userDevices = (req, res) => {
   const userPayload = req.user;
   try {

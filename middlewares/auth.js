@@ -43,10 +43,9 @@ exports.userIsAuthenticated = (req, res, next) => {
 
 exports.userIsInRole = (authorizedRoles) => {
   return (req, res, next) => {
-    const userRoles = ["Comun"];
-    const userValidRole = userRoles.find((ur) => {
-      return authorizedRoles.find((ar) => ar === ur) != undefined;
-    });
+    const userRole = req.user.roles;
+    const userValidRole =
+      authorizedRoles.find((ar) => ar === userRole) != undefined;
     if (!userValidRole) {
       res.status(401).json({
         error: true,
