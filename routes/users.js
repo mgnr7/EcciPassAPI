@@ -6,7 +6,8 @@ const {
   recoverPassword,
   resetPassword,
   userProfile,
-  userHelp,
+  profileUpdate,
+  profileDelete,
 } = require("../controllers/users");
 const { userIsAuthenticated } = require("../middlewares/auth");
 
@@ -23,5 +24,9 @@ router.route("/recover-password").post(recoverPassword);
 router.route("/reset-password").patch(resetPassword);
 
 router.route("/profile").get([userIsAuthenticated], userProfile);
+
+router.route("/profile-update").patch(profileUpdate);
+
+router.route("/profile-delete").delete(profileDelete);
 
 module.exports = router;

@@ -26,3 +26,7 @@ exports.userDevices = (req, res) => {
     res.status(500).send("Server error: " + error);
   }
 };
+
+exports.deviceDetails = (req, res) => {};
+exports.deviceDelete = (req, res) => {};
+exports.deviceUpdateStatus = (req, res) => {};
