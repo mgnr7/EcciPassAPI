@@ -67,6 +67,10 @@ exports.userProfile = (req, res) => {
   const userPayload = req.body;
 };
 
-exports.userHelp = (req, res) => {
+exports.profileUpdate = (req, res) => {
+  const userPayload = req.body;
+};
+
+exports.profileDelete = (req, res) => {
   const userPayload = req.body;
 };
