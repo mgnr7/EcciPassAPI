@@ -56,7 +56,35 @@ exports.loginUser = (req, res) => {
 };
 
 exports.recoverPassword = (req, res) => {
-  const userPayload = req.body;
+  try {
+    const userPayload = req.body;
+    // El usuario debe relacionarse con un correo de recuperacion
+    const user = userPayload.email;
+    if (!user) {
+      res.status(401).send("Las credenciales son incorrectas.");
+      return;
+    }
+    const randomToken = Math.floor(
+      Math.random() * (999999 - 100000 + 1) + 100000
+    );
+    //No se destruye el codigo porque no hay db
+    const nowDate = new Date();
+    const expirationDate = new Date(
+      nowDate.setMinutes(nowDate.getMinutes() + 15)
+    ).toISOString();
+
+    createRecoveryCode({
+      userId: user.id,
+      code: randomToken,
+      expirationDate,
+    });
+    sendRecoveryCodeEmail(user.email, randomToken);
+    res.status(200).send();
+    //Si el codigo se crea con exito y se envia (200)
+
+  } catch (error) {
+    res.status(500).send("Server error: " + error);
+  }
 };
 
 exports.resetPassword = (req, res) => {
