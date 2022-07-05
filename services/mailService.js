@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 
 const getTransporter = function () {
-    let transporter;
+  let transporter;
   transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
@@ -14,14 +14,13 @@ const getTransporter = function () {
   return transporter;
 };
 
-exports.senRecoveryCodeEmail = () => {
-    let transporter = getTransporter();
-    await transporter.sendMail({
-      /*Definir correo electronico*/
-      from: "",
-      to: userEmail,
-      subject: "Código de recuperación EcciPass",
-      text: `Utilice este código para recuperar su contraseña: ${randomToken}`,
-      html: `Utilice este código para recuperar su contraseña: <strong>${randomToken}</strong>`,
-    });
+exports.senRecoveryCodeEmail = async (userEmail, randomToken) => {
+  let transporter = getTransporter();
+  await transporter.sendMail({
+    from: "ci0137@psgfanclubcr.com",
+    to: userEmail,
+    subject: "Código de recuperación EcciPass",
+    text: `Utilice este código para recuperar su contraseña: ${randomToken}`,
+    html: `Utilice este código para recuperar su contraseña: <strong>${randomToken}</strong>`,
+  });
 };
