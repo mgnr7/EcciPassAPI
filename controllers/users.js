@@ -12,6 +12,8 @@ exports.userWelcome = (req, res) => {
   res.send("Welcome");
 };
 
+//Creacion de usuario comunes unicamente
+//Los perfiles de guardas deben ser creados con el adminisrador directamente
 exports.createUser = (req, res) => {
   try {
     const userPayload = req.body;
@@ -97,6 +99,7 @@ exports.recoverPassword = (req, res) => {
       code: randomToken,
       expirationDate,
     });
+    
     sendRecoveryCodeEmail(user.email, randomToken);
     res.status(200).send();
     //Si el codigo se crea con exito y se envia (200)
@@ -110,8 +113,21 @@ exports.resetPassword = (req, res) => {
   const userPayload = req.body;
 };
 
+// Devuelve los datos de un usuario comun especifico
 exports.userProfile = (req, res) => {
   const userPayload = req.body;
+  try {
+    //const roles = userRoles.find((ur) => ur.userId === user.userId);
+    let profileData = [];
+    for (let index = 0; index < usersList.length; index++) {
+      if (usersList[index].userId === userPayload.userId) {
+        profileData.push(usersList[index]);
+      }
+    }
+    res.json(profileData);
+  } catch (error) {
+    res.status(500).send("No se pudo cargar los datos del perfil: " + error);
+  }
 };
 
 exports.profileUpdate = (req, res) => {
