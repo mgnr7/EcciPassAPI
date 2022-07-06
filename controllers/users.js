@@ -88,21 +88,24 @@ exports.recoverPassword = (req, res) => {
     const randomToken = Math.floor(
       Math.random() * (999999 - 100000 + 1) + 100000
     );
+
     //No se destruye el codigo porque no hay db
+
+    //Expiracion codigo
     const nowDate = new Date();
     const expirationDate = new Date(
       nowDate.setMinutes(nowDate.getMinutes() + 15)
     ).toISOString();
 
-    createRecoveryCode({
+    UserRecoveryCode.createRecoveryCode({
       userId: user.id,
       code: randomToken,
       expirationDate,
     });
-    
+
     sendRecoveryCodeEmail(user.email, randomToken);
     res.status(200).send();
-    //Si el codigo se crea con exito y se envia (200)
+    //Si el codigo se crea con exito se envia
 
   } catch (error) {
     res.status(500).send("Server error: " + error);
@@ -111,6 +114,42 @@ exports.recoverPassword = (req, res) => {
 
 exports.resetPassword = (req, res) => {
   const userPayload = req.body;
+  try {
+      const user = findUser({
+      where: { email: userPayload.email },
+      include: ["recoveryCode"],
+    });
+    if (
+      !user ||
+      !user.recoveryCode ||
+      user.recoveryCode.code !== userPayload.code
+    ) {
+      //Codigo invalido
+      res.status(401).send("Datos no válidos");
+      return;
+    }
+    
+    //Expiracion de tiempo
+    if (user.recoveryCode.expirationDate < new Date()) {
+      res
+        .status(401)
+        .send(
+          "El código de recuperación brindado ya expiró. Solicite un nuevo código de recuperación."
+        );
+      return;
+    }
+
+    user.password = bcrypt.hash(userPayload.password, saltRounds);
+    user.save();
+
+    //No se borra codigo, no hay DB
+
+    res.status(204).send();
+    //Se envia codigo
+
+  } catch (error) {
+    res.status(500).send("Error en el servidor al cambiar contraseña: " + error);
+  }
 };
 
 // Devuelve los datos de un usuario comun especifico
