@@ -10,6 +10,7 @@ exports.createDevice = (req, res) => {
       model: productPayload.model,
       serialNumber: productPayload.serialNumber,
       activeType: productPayload.activeType,
+      activePicture: productPayload.activePicture,
     });
     res.json(newDevice);
   } catch(error) {

@@ -153,17 +153,26 @@ exports.resetPassword = (req, res) => {
 };
 
 // Devuelve los datos de un usuario comun especifico
+
 exports.userProfile = (req, res) => {
   const userPayload = req.body;
   try {
     //const roles = userRoles.find((ur) => ur.userId === user.userId);
-    let profileData = [];
+    let user = null;
     for (let index = 0; index < usersList.length; index++) {
       if (usersList[index].userId === userPayload.userId) {
-        profileData.push(usersList[index]);
+        user = usersList[index];
+        break;
       }
     }
-    res.json(profileData);
+    if (!user) {
+      res.status(404).json({
+        error: true,
+        message: "Usuario no encontrado User id: " + devicePayload.userId,
+      });
+    } else {
+      res.json(user);
+    }
   } catch (error) {
     res.status(500).send("No se pudo cargar los datos del perfil: " + error);
   }
