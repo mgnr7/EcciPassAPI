@@ -27,6 +27,32 @@ exports.userDevices = (req, res) => {
   }
 };
 
-exports.deviceDetails = (req, res) => {};
+/*Este metodo tiene que retornar los datos de un dispositivo en especifico
+En el body del request viene el id del dispositivo que hay que traer
+*/
+exports.deviceDetails = (req, res) => {
+  const devicePayload = req.body;
+  try {
+    let device = null;
+    for (let index = 0; index < devicesList.length; index++) {
+      if (devicesList[index].deviceId === devicePayload.deviceId) {
+        device = devicesList[index];
+        break;
+      }
+    }
+    if (!device) {
+      res.status(404).json({
+        error: true,
+        message: "Device not found (device id: " + devicePayload.deviceId + ")",
+      });
+    } else {
+      res.json(device);
+    }
+  } catch (error) {
+    res.status(500).send("Server error: " + error);
+  }
+};
+
 exports.deviceDelete = (req, res) => {};
 exports.deviceUpdateStatus = (req, res) => {};
+exports.registerDevice = (req, res) => {};
