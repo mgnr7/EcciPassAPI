@@ -2,6 +2,7 @@ const express = require("express");
 const { ROLES } = require("../utils/constants");
 const { userIsAuthenticated, userIsInRole } = require("../middlewares/auth");
 const {
+  createDevice,
   userDevices,
   listDevices,
   deviceDetails,
@@ -15,6 +16,7 @@ router
   .route("/")
   .get([userIsAuthenticated, userIsInRole([ROLES.ADMIN])], listDevices);
 router.route("/user-devices").get([userIsAuthenticated], userDevices);
+router.route("/registerDevice").post([userIsAuthenticated], createDevice);
 router.route("/device-details").get([userIsAuthenticated], deviceDetails);
 router.route("/device-delete").delete([userIsAuthenticated], deviceDelete);
 router
