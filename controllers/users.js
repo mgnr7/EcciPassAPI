@@ -13,7 +13,26 @@ exports.userWelcome = (req, res) => {
 };
 
 exports.createUser = (req, res) => {
-  const userPayload = req.body;
+  try {
+    const userPayload = req.body;
+    const newUser = User.create({
+      username: userPayload.username,
+      password: bcrypt.hash(userPayload.password, saltRounds),
+      name: userPayload.name,
+      appellido: userPayload.appellido,
+      id: userPayload.id,
+      email: userPayload.email,
+      userType: userPayload.userType,
+      userPicture: userPayload.userPicture,
+    });
+    res.json(newUser);
+  } catch(error) {
+    res.status(500).json({
+      message: "Error al crear el usuario",
+      error,
+    });
+    return;
+  }
 };
 
 exports.loginUser = (req, res) => {
