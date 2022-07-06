@@ -32,8 +32,6 @@ En el body del request viene el id del dispositivo que hay que traer
 */
 exports.deviceDetails = (req, res) => {
   const devicePayload = req.body;
-  console.log("Entro al deviceDetails");
-  console.log("Device payload ", devicePayload);
   try {
     let device = null;
     for (let index = 0; index < devicesList.length; index++) {
