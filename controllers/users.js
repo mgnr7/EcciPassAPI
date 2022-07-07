@@ -152,9 +152,24 @@ exports.resetPassword = (req, res) => {
   }
 };
 
-// Devuelve los datos de un usuario comun especifico
-
+// Devuelve los datos de un usuario comun especifico GET
 exports.userProfile = (req, res) => {
+  const userPayload = req.user;
+  try {
+    let users = [];
+    for (let index = 0; index < usersList.length; index++) {
+      if (usersList[index].userId === userPayload.userId) {
+        users.push(usersList[index]);
+      }
+    }
+    res.json(users);
+  } catch (error) {
+    res.status(500).send("Server error: " + error);
+  }
+};
+
+//Dispositivo especifico POST
+exports.profileDetails = (req, res) => {
   const userPayload = req.body;
   try {
     //const roles = userRoles.find((ur) => ur.userId === user.userId);
