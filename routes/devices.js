@@ -17,7 +17,7 @@ router
   .get([userIsAuthenticated, userIsInRole([ROLES.ADMIN])], listDevices);
 router.route("/user-devices").get([userIsAuthenticated], userDevices);
 router.route("/device-details").post([userIsAuthenticated], deviceDetails);
-router.route("/device-delete").delete([userIsAuthenticated], deviceDelete);
+router.route("/device-delete/:deviceId").delete([userIsAuthenticated], deviceDelete);
 router
   .route("/device-status-update")
   .patch([userIsAuthenticated], deviceUpdateStatus);
