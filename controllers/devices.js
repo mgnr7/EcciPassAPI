@@ -27,9 +27,6 @@ exports.userDevices = (req, res) => {
   }
 };
 
-/*Este metodo tiene que retornar los datos de un dispositivo en especifico
-En el body del request viene el id del dispositivo que hay que traer
-*/
 exports.deviceDetails = (req, res) => {
   const devicePayload = req.body;
   try {
@@ -53,6 +50,46 @@ exports.deviceDetails = (req, res) => {
   }
 };
 
-exports.deviceDelete = (req, res) => {};
+exports.deviceDelete = (req, res) => {
+  const deviceId = parseInt(req.params.deviceId);
+  const userId = req.user.userId;
+  if (deviceId <= 0) {
+    res.status(404).json({
+      error: true,
+      message: "The current device Id is not valid (device id: " + deviceId + ")",
+    });
+  }
+  else{
+    try {
+      let device = null;
+      for (let index = 0; index < devicesList.length; index++) {
+        if (devicesList[index].deviceId === deviceId) {
+          if(devicesList[index].userId === userId){
+            device = devicesList.splice(index, 1);
+          }
+          else{
+            res.status(403).json({
+              error: true,
+              message: "The user does not have access rights to the content (device id: " + deviceId + ")",
+            });
+            return;
+          }
+          break;
+        }
+      }
+      if (device === null || device === undefined || device.length == 0) {
+        res.status(404).json({
+          error: true,
+          message: "Device not found (device id: " + deviceId + ")",
+        });
+      } else {
+        res.json(device);
+      }
+    } catch (error) {
+      res.status(500).send("Server error: " + error);
+    }
+  }
+};
+
 exports.deviceUpdateStatus = (req, res) => {};
 exports.registerDevice = (req, res) => {};

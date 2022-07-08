@@ -86,6 +86,16 @@ let devicesList = [
     imageUrl: "https://m.media-amazon.com/images/I/81AKWKpG4TL._AC_SY355_.jpg",
     state: "En revisión",
   },
+  {
+    userId: 1,
+    deviceId: 3,
+    brand: "DELL",
+    model: "G3 15 3579",
+    serialNumber: "UX582HS-XH99T",
+    deviceType: "Laptop",
+    imageUrl: "https://www.notebookcheck.org/uploads/tx_nbc2/DellG3-3579__1_.jpg",
+    state: "Extraviado",
+  },
 ];
 
 module.exports = {
