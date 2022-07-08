@@ -12,22 +12,39 @@ exports.userWelcome = (req, res) => {
   res.send("Welcome");
 };
 
-//Creacion de usuario comunes unicamente
-//Los perfiles de guardas deben ser creados con el adminisrador directamente
+//Crear un usuario
+// Darle a ese usuario un rol especifico
 exports.createUser = (req, res) => {
   try {
     const userPayload = req.body;
-    const newUser = User.create({
-      username: userPayload.username,
-      password: bcrypt.hash(userPayload.password, saltRounds),
-      name: userPayload.name,
-      appellido: userPayload.appellido,
-      id: userPayload.id,
-      email: userPayload.email,
-      userType: userPayload.userType,
-      userPicture: userPayload.userPicture,
-    });
-    res.json(newUser);
+    
+    //Info user
+    const userId = userPayload.id;
+    const username = userPayload.username;
+    const password = bcrypt.hash(userPayload.password, saltRounds);
+    const name = userPayload.name;
+    const apellido = userPayload.appellido;
+    const id = userPayload.id;
+    const email = userPayload.email;
+    const userType = userPayload.userType;
+
+    /*
+    if (userType == "estudiante") {
+      const rolID = 3;
+    }
+    */
+
+    //const userPicture = userPayload.userPicture,
+
+    //Se guarda toda la info en un arreglo
+    const newUserInfo = {userId,username,password,name,apellido,id,email,userType};
+    //const newUsersRoles = {userId,rolID};
+
+    usersList.push(newUserInfo);
+    //userRoles.push(newUsersRoles);
+    res.json(newUserInfo);
+
+
   } catch(error) {
     res.status(500).json({
       message: "Error al crear el usuario",
