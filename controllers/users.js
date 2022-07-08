@@ -24,7 +24,13 @@ exports.loginUser = (req, res) => {
     //Se busca el usuario con el email de la solicitud
     const user = usersList.find((u) => u.email === email);
     let passwordCheck = false;
-    if (user) {
+    if (user == null) {
+      res.status(401).json({
+        error: true,
+        message: "Las credenciales son incorrectas.",
+      });
+      return;
+    } else {
       passwordCheck = user.password === userPayload.password;
     }
 
@@ -72,5 +78,40 @@ exports.profileUpdate = (req, res) => {
 };
 
 exports.profileDelete = (req, res) => {
-  const userPayload = req.body;
+  const userId = parseInt(req.params.userId);
+  const userReqId = req.user.userId;
+  if (userId <= 0) {
+    res.status(404).json({
+      error: true,
+      message: "The current user Id is not valid (user id: " + userId + ")",
+    });
+  } else {
+    try {
+      let user = null;
+      for (let index = 0; index < usersList.length; index++) {
+        if (usersList[index].userId === userId) {
+          if (usersList[index].userId === userReqId) {
+            user = usersList.splice(index, 1);
+          } else {
+            res.status(403).json({
+              error: true,
+              message: "The user does not have the access rights needed",
+            });
+            return;
+          }
+          break;
+        }
+      }
+      if (user === null || user === undefined || user.length == 0) {
+        res.status(404).json({
+          error: true,
+          message: "User not found (user id: " + userId + ")",
+        });
+      } else {
+        res.json(user);
+      }
+    } catch (error) {
+      res.status(500).send("Server error: " + error);
+    }
+  }
 };
