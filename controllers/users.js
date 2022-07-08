@@ -5,6 +5,7 @@ const { sendRecoveryCodeEmail } = require("../services/mailService");
 const { roles } = require("../utils/testData");
 let { usersList } = require("../utils/testData");
 let { userRoles } = require("../utils/testData");
+const { restart } = require("nodemon");
 
 const saltRounds = 10;
 
@@ -103,14 +104,42 @@ exports.resetPassword = (req, res) => {
   const userPayload = req.body;
 };
 
-// Devuelve los datos de un usuario comun especifico GET
 exports.userProfile = (req, res) => {
-  const userPayload = req.body;
+  const userPayload = req.user;
+  try {
+    let users = [];
+    for (let index = 0; index < usersList.length; index++) {
+      if (usersList[index].userId === userPayload.userId) {
+        users.push(usersList[index]);
+      }
+    }
+    res.json(users)
+  } catch (error) { 
+    restart.status(500).send("Server error: " + error);
+  }
 };
 
-//Dispositivo especifico POST
 exports.profileDetails = (req, res) => {
-  
+  const userId = parseInt(req.params.userId);
+  try {
+    let users = null;
+    for (let index = 0; index < usersList.length; index++) {
+      if (usersList[index].userId === userId) {
+        users = usersList[index];
+        break;
+      }
+    }
+    if (!users) {
+      res.status(404).json({
+        error: true,
+        message: "User not found (user id: " + userId + ")",
+      });
+    } else {
+      res.json(users);
+    }
+  } catch (error) {
+    res.status(500).send("Server error: " + error);
+  }
 };
 
 exports.profileUpdate = (req, res) => {

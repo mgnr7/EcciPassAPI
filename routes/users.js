@@ -24,9 +24,9 @@ router.route("/recover-password").post(recoverPassword);
 
 router.route("/reset-password").patch(resetPassword);
 
-router.route("/profile").get(userProfile);
+router.route("/user-profile").get([userIsAuthenticated],userProfile);
 
-router.route("/profile-details").post(profileDetails);
+router.route("/user-profile/:userId").get([userIsAuthenticated],profileDetails);
 
 router.route("/profile-update").patch(profileUpdate);
 
