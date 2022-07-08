@@ -17,7 +17,7 @@ exports.userWelcome = (req, res) => {
 exports.createUser = (req, res) => {
   try {
     const userPayload = req.body;
-    
+
     //Info user
     const userId = userPayload.id;
     const username = userPayload.username;
@@ -93,121 +93,24 @@ exports.loginUser = (req, res) => {
   }
 };
 
+
 exports.recoverPassword = (req, res) => {
-  try {
-    const userPayload = req.body;
-    // El usuario debe relacionarse con un correo de recuperacion
-    const user = userPayload.email;
-    if (!user) {
-      res.status(401).send("Las credenciales son incorrectas.");
-      return;
-    }
-    const randomToken = Math.floor(
-      Math.random() * (999999 - 100000 + 1) + 100000
-    );
-
-    //No se destruye el codigo porque no hay db
-
-    //Expiracion codigo
-    const nowDate = new Date();
-    const expirationDate = new Date(
-      nowDate.setMinutes(nowDate.getMinutes() + 15)
-    ).toISOString();
-
-    UserRecoveryCode.createRecoveryCode({
-      userId: user.id,
-      code: randomToken,
-      expirationDate,
-    });
-
-    sendRecoveryCodeEmail(user.email, randomToken);
-    res.status(200).send();
-    //Si el codigo se crea con exito se envia
-
-  } catch (error) {
-    res.status(500).send("Server error: " + error);
-  }
+  const userPayload = req.body;
 };
+
 
 exports.resetPassword = (req, res) => {
   const userPayload = req.body;
-  try {
-      const user = findUser({
-      where: { email: userPayload.email },
-      include: ["recoveryCode"],
-    });
-    if (
-      !user ||
-      !user.recoveryCode ||
-      user.recoveryCode.code !== userPayload.code
-    ) {
-      //Codigo invalido
-      res.status(401).send("Datos no válidos");
-      return;
-    }
-    
-    //Expiracion de tiempo
-    if (user.recoveryCode.expirationDate < new Date()) {
-      res
-        .status(401)
-        .send(
-          "El código de recuperación brindado ya expiró. Solicite un nuevo código de recuperación."
-        );
-      return;
-    }
-
-    user.password = bcrypt.hash(userPayload.password, saltRounds);
-    user.save();
-
-    //No se borra codigo, no hay DB
-
-    res.status(204).send();
-    //Se envia codigo
-
-  } catch (error) {
-    res.status(500).send("Error en el servidor al cambiar contraseña: " + error);
-  }
 };
 
 // Devuelve los datos de un usuario comun especifico GET
 exports.userProfile = (req, res) => {
-  const userPayload = req.user;
-  try {
-    let users = [];
-    for (let index = 0; index < usersList.length; index++) {
-      if (usersList[index].userId === userPayload.userId) {
-        users.push(usersList[index]);
-      }
-    }
-    res.json(users);
-  } catch (error) {
-    res.status(500).send("Server error: " + error);
-  }
+  const userPayload = req.body;
 };
 
 //Dispositivo especifico POST
 exports.profileDetails = (req, res) => {
-  const userPayload = req.body;
-  try {
-    //const roles = userRoles.find((ur) => ur.userId === user.userId);
-    let user = null;
-    for (let index = 0; index < usersList.length; index++) {
-      if (usersList[index].userId === userPayload.userId) {
-        user = usersList[index];
-        break;
-      }
-    }
-    if (!user) {
-      res.status(404).json({
-        error: true,
-        message: "Usuario no encontrado User id: " + devicePayload.userId,
-      });
-    } else {
-      res.json(user);
-    }
-  } catch (error) {
-    res.status(500).send("No se pudo cargar los datos del perfil: " + error);
-  }
+  
 };
 
 exports.profileUpdate = (req, res) => {
