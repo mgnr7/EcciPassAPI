@@ -48,11 +48,11 @@ exports.userDevices = (req, res) => {
 };
 
 exports.deviceDetails = (req, res) => {
-  const devicePayload = req.body;
+  const deviceId = parseInt(req.params.deviceId);
   try {
     let device = null;
     for (let index = 0; index < devicesList.length; index++) {
-      if (devicesList[index].deviceId === devicePayload.deviceId) {
+      if (devicesList[index].deviceId === deviceId) {
         device = devicesList[index];
         break;
       }
@@ -60,7 +60,7 @@ exports.deviceDetails = (req, res) => {
     if (!device) {
       res.status(404).json({
         error: true,
-        message: "Device not found (device id: " + devicePayload.deviceId + ")",
+        message: "Device not found (device id: " + deviceId + ")",
       });
     } else {
       res.json(device);
@@ -76,21 +76,24 @@ exports.deviceDelete = (req, res) => {
   if (deviceId <= 0) {
     res.status(404).json({
       error: true,
-      message: "The current device Id is not valid (device id: " + deviceId + ")",
+      message:
+        "The current device Id is not valid (device id: " + deviceId + ")",
     });
-  }
-  else{
+  } else {
     try {
       let device = null;
       for (let index = 0; index < devicesList.length; index++) {
         if (devicesList[index].deviceId === deviceId) {
-          if(devicesList[index].userId === userId){
+          if (devicesList[index].userId === userId) {
             device = devicesList.splice(index, 1);
-          }
-          else{
+            console.log("Se elimino el dispositivo id: ", deviceId);
+          } else {
             res.status(403).json({
               error: true,
-              message: "The user does not have access rights to the content (device id: " + deviceId + ")",
+              message:
+                "The user does not have access rights to the content (device id: " +
+                deviceId +
+                ")",
             });
             return;
           }
