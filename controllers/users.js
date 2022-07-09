@@ -2,9 +2,12 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { getQuery } = require("../services/dbService");
 const { sendRecoveryCodeEmail } = require("../services/mailService");
-const { roles } = require("../utils/testData");
+//const { roles } = require("../utils/testData");
 let { usersList } = require("../utils/testData");
 let { userRoles } = require("../utils/testData");
+let { recoveryCodes } = require("../utils/testData");
+const { restart } = require("nodemon");
+const nodemailer = require("nodemailer");
 
 const saltRounds = 10;
 
@@ -98,24 +101,126 @@ exports.loginUser = (req, res) => {
   }
 };
 
+exports.recoverPassword = async (req, res) => {
+  try {
+    const userPayload = req.body;
+    const user = userPayload.email;
+    if (!user) {
+      res.status(401).send("Las credenciales son incorrectas.");
+      return;
+    }
+    const randomToken = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000);
+    
+    const mailTransporter = nodemailer.createTransport({
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        secure: true,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASSWORD,
+        }
+    });
 
-exports.recoverPassword = (req, res) => {
-  const userPayload = req.body;
+    mailTransporter.sendMail(
+      {
+        from: "ci0137@psgfanclubcr.com",
+        to: user,
+        subject: "Código de recuperación EcciPass",
+        text: `Utilice este código para recuperar su contraseña: ${randomToken}`,
+        html: `Utilice este código para recuperar su contraseña: <strong>${randomToken}</strong>`,
+      },
+      function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Email sent: " + info.response);
+        }
+      }
+    );
+
+    recoveryCodes.push({user,randomToken});
+    res.status(200).send();
+
+  } catch (error) {
+    res.status(500).send("Server error: " + error);
+  }
 };
 
 
-exports.resetPassword = (req, res) => {
-  const userPayload = req.body;
-};
+exports.resetPassword = async (req, res) => {
+  try {
+    const userPayload = req.body;
+    const email = userPayload.email;
 
-// Devuelve los datos de un usuario comun especifico GET
-exports.userProfile = (req, res) => {
-  const userPayload = req.body;
-};
+    //Se busca el usuario con el email de la solicitud
+    const user = recoveryCodes.find((u) => u.email === email);
+    let passwordCheck = false;
 
-//Dispositivo especifico POST
-exports.profileDetails = (req, res) => {
+    if (!user == null) {
+      res.status(401).json({
+        error: true,
+        message: "Las credenciales son incorrectas.",
+      });
+      return;
+    } else {
+      passwordCheck = user.code === userPayload.code;
+    }
+
+    if (!user || !passwordCheck) {
+      res.status(401).json({
+        error: true,
+        message: "Invalid user or code.",
+      });
+      return;
+    }
   
+    const newPassword = bcrypt.hash(userPayload.password, saltRounds);
+    recoveryCodes.push({user,passwordCheck,newPassword});
+
+    console.log("Password succesfully changed " + newPassword);
+    res.status(204).send();
+
+  } catch (error) {
+    res.status(500).send("Server error: " + error);
+  }
+};
+
+exports.userProfile = (req, res) => {
+  const userPayload = req.user;
+  try {
+    let users = [];
+    for (let index = 0; index < usersList.length; index++) {
+      if (usersList[index].userId === userPayload.userId) {
+        users.push(usersList[index]);
+      }
+    }
+    res.json(users)
+  } catch (error) { 
+    restart.status(500).send("Server error: " + error);
+  }
+};
+
+exports.profileDetails = (req, res) => {
+  const userId = parseInt(req.params.userId);
+  try {
+    let users = null;
+    for (let index = 0; index < usersList.length; index++) {
+      if (usersList[index].userId === userId) {
+        users = usersList[index];
+        break;
+      }
+    }
+    if (!users) {
+      res.status(404).json({
+        error: true,
+        message: "User not found (user id: " + userId + ")",
+      });
+    } else {
+      res.json(users);
+    }
+  } catch (error) {
+    res.status(500).send("Server error: " + error);
+  }
 };
 
 exports.profileUpdate = (req, res) => {

@@ -6,10 +6,10 @@ let usersList = [
     password: "comun",
     name: "Pedro",
     lastName: "Perez",
-    carnet: "B62787",
-    identificacion: "123456789",
-    email: "comun@gmail.com",
-    accountType: "estudiante",
+    Carnet: "B62787",
+    Identificacion: "123456789",
+    email: "andazo2501@gmail.com",
+    AccountType: "estudiante",
   },
   {
     userId: 2,
@@ -114,9 +114,17 @@ let devicesList = [
   },
 ];
 
+let recoveryCodes = [
+  {
+    email: "andazo2501@gmail.com",
+    code: 12345,
+  }
+];
+
 module.exports = {
   usersList,
   roles,
   userRoles,
   devicesList,
+  recoveryCodes
 };
