@@ -17,9 +17,9 @@ let usersList = [
     password: "admin",
     name: "Andrea",
     lastName: "Rojas",
-    Identificacion: "111222333",
+    identificacion: "111222333",
     email: "admin@gmail.com",
-    AccountType: "administrador",
+    accountType: "administrador",
   },
   {
     userId: 3,
@@ -27,9 +27,20 @@ let usersList = [
     password: "guarda",
     name: "Patricio",
     lastName: "Quesada",
-    Identificacion: "444555666",
+    identificacion: "444555666",
     email: "guarda@gmail.com",
-    AccountType: "guarda",
+    accountType: "guarda",
+  },
+  {
+    userId: 4,
+    user: "UsuarioDelete",
+    password: "delete",
+    name: "Marshall",
+    lastName: "Garcia",
+    carnet: "A92487",
+    identificacion: "123456789",
+    email: "delete@gmail.com",
+    accountType: "estudiante",
   },
 ];
 
@@ -60,6 +71,10 @@ let userRoles = [
   {
     userId: 3,
     roleID: 2,
+  },
+  {
+    userId: 4,
+    roleID: 3,
   },
 ];
 
@@ -93,7 +108,8 @@ let devicesList = [
     model: "G3 15 3579",
     serialNumber: "UX582HS-XH99T",
     deviceType: "Laptop",
-    imageUrl: "https://www.notebookcheck.org/uploads/tx_nbc2/DellG3-3579__1_.jpg",
+    imageUrl:
+      "https://www.notebookcheck.org/uploads/tx_nbc2/DellG3-3579__1_.jpg",
     state: "Extraviado",
   },
 ];
