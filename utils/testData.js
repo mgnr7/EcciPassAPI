@@ -8,7 +8,7 @@ let usersList = [
     lastName: "Perez",
     Carnet: "B62787",
     Identificacion: "123456789",
-    email: "comun@gmail.com",
+    email: "andazo2501@gmail.com",
     AccountType: "estudiante",
   },
   {
@@ -96,6 +96,12 @@ let devicesList = [
     imageUrl: "https://www.notebookcheck.org/uploads/tx_nbc2/DellG3-3579__1_.jpg",
     state: "Extraviado",
   },
+];
+
+let recoveryCodes = [
+  {
+    code: 123,
+  }
 ];
 
 module.exports = {
