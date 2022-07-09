@@ -2,6 +2,7 @@ const express = require("express");
 const { ROLES } = require("../utils/constants");
 const { userIsAuthenticated, userIsInRole } = require("../middlewares/auth");
 const {
+  createDevice,
   userDevices,
   listDevices,
   deviceDetails,

@@ -12,8 +12,46 @@ exports.userWelcome = (req, res) => {
   res.send("Welcome");
 };
 
+//Crear un usuario
+// Darle a ese usuario un rol especifico
 exports.createUser = (req, res) => {
-  const userPayload = req.body;
+  try {
+    const userPayload = req.body;
+
+    //Info user
+    const userId = userPayload.id;
+    const username = userPayload.username;
+    const password = bcrypt.hash(userPayload.password, saltRounds);
+    const name = userPayload.name;
+    const apellido = userPayload.appellido;
+    const id = userPayload.id;
+    const email = userPayload.email;
+    const userType = userPayload.userType;
+
+    /*
+    if (userType == "estudiante") {
+      const rolID = 3;
+    }
+    */
+
+    //const userPicture = userPayload.userPicture,
+
+    //Se guarda toda la info en un arreglo
+    const newUserInfo = {userId,username,password,name,apellido,id,email,userType};
+    //const newUsersRoles = {userId,rolID};
+
+    usersList.push(newUserInfo);
+    //userRoles.push(newUsersRoles);
+    res.json(newUserInfo);
+
+
+  } catch(error) {
+    res.status(500).json({
+      message: "Error al crear el usuario",
+      error,
+    });
+    return;
+  }
 };
 
 exports.loginUser = (req, res) => {
@@ -61,16 +99,24 @@ exports.loginUser = (req, res) => {
   }
 };
 
+
 exports.recoverPassword = (req, res) => {
   const userPayload = req.body;
 };
+
 
 exports.resetPassword = (req, res) => {
   const userPayload = req.body;
 };
 
+// Devuelve los datos de un usuario comun especifico GET
 exports.userProfile = (req, res) => {
   const userPayload = req.body;
+};
+
+//Dispositivo especifico POST
+exports.profileDetails = (req, res) => {
+  
 };
 
 exports.profileUpdate = (req, res) => {
