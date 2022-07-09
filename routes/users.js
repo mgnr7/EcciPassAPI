@@ -25,7 +25,7 @@ router.route("/reset-password").patch(resetPassword);
 
 router.route("/profile").get([userIsAuthenticated], userProfile);
 
-router.route("/profile-update").patch(profileUpdate);
+router.route("/profile-update").patch([userIsAuthenticated], profileUpdate);
 
 router.route("/profile-delete").delete(profileDelete);
 

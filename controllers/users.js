@@ -18,7 +18,6 @@ exports.createUser = (req, res) => {
 
 exports.loginUser = (req, res) => {
   try {
-    const query = getQuery();
     const userPayload = req.body;
     const email = userPayload.email;
     //Se busca el usuario con el email de la solicitud
@@ -46,7 +45,7 @@ exports.loginUser = (req, res) => {
     const token = jwt.sign(
       { userId: user.userId, roles: roles.roleID },
       process.env.JWT_KEY,
-      { expiresIn: "5m" }
+      { expiresIn: "10m" }
     );
     user.token = token;
     res.json(user);
@@ -68,7 +67,32 @@ exports.userProfile = (req, res) => {
 };
 
 exports.profileUpdate = (req, res) => {
+  const userId = req.user.userId;
   const userPayload = req.body;
+
+  for (let index = 0; index < usersList.length; index++) {
+    if (usersList[index].userId === userId) {
+      console.log(JSON.stringify(usersList[index]));
+
+      payloadProperties = Object.keys(userPayload);
+
+      for (let keyIndex = 0; keyIndex < payloadProperties.length; keyIndex++) {
+        if (
+          payloadProperties[keyIndex] === "password" ||
+          payloadProperties[keyIndex] === "AccountType"
+        ) {
+          res.status(401).json({
+            error: true,
+            message: "Trying to change restricted properties",
+          });
+          return;
+        }
+        usersList[index][payloadProperties[keyIndex]] =
+          userPayload[payloadProperties[keyIndex]];
+      }
+    }
+    res.status(500).send("Server error: ");
+  }
 };
 
 exports.profileDelete = (req, res) => {
