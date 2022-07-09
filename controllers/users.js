@@ -5,6 +5,7 @@ const { sendRecoveryCodeEmail } = require("../services/mailService");
 //const { roles } = require("../utils/testData");
 let { usersList } = require("../utils/testData");
 let { userRoles } = require("../utils/testData");
+let { recoveryCodes } = require("../utils/testData");
 const { restart } = require("nodemon");
 const nodemailer = require("nodemailer");
 
@@ -138,6 +139,7 @@ exports.recoverPassword = async (req, res) => {
       }
     );
 
+    recoveryCodes.push({user,randomToken});
     res.status(200).send();
 
   } catch (error) {
@@ -146,10 +148,38 @@ exports.recoverPassword = async (req, res) => {
 };
 
 
-exports.resetPassword = (req, res) => {
+exports.resetPassword = async (req, res) => {
   try {
     const userPayload = req.body;
+    const email = userPayload.email;
 
+    //Se busca el usuario con el email de la solicitud
+    const user = recoveryCodes.find((u) => u.email === email);
+    let passwordCheck = false;
+
+    if (!user == null) {
+      res.status(401).json({
+        error: true,
+        message: "Las credenciales son incorrectas.",
+      });
+      return;
+    } else {
+      passwordCheck = user.code === userPayload.code;
+    }
+
+    if (!user || !passwordCheck) {
+      res.status(401).json({
+        error: true,
+        message: "Invalid user or code.",
+      });
+      return;
+    }
+  
+    const newPassword = bcrypt.hash(userPayload.password, saltRounds);
+    recoveryCodes.push({user,passwordCheck,newPassword});
+
+    console.log("Password succesfully changed " + newPassword);
+    res.status(204).send();
 
   } catch (error) {
     res.status(500).send("Server error: " + error);
