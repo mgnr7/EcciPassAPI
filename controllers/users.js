@@ -185,6 +185,7 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
+//Usuario especifico
 exports.userProfile = (req, res) => {
   const userPayload = req.user;
   try {
