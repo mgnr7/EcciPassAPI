@@ -67,31 +67,38 @@ exports.userProfile = (req, res) => {
 };
 
 exports.profileUpdate = (req, res) => {
-  const userId = req.user.userId;
-  const userPayload = req.body;
+  try {
+    const userId = req.user.userId;
+    const userPayload = req.body;
 
-  for (let index = 0; index < usersList.length; index++) {
-    if (usersList[index].userId === userId) {
-      console.log(JSON.stringify(usersList[index]));
+    for (let index = 0; index < usersList.length; index++) {
+      if (usersList[index].userId === userId) {
+        payloadProperties = Object.keys(userPayload);
 
-      payloadProperties = Object.keys(userPayload);
-
-      for (let keyIndex = 0; keyIndex < payloadProperties.length; keyIndex++) {
-        if (
-          payloadProperties[keyIndex] === "password" ||
-          payloadProperties[keyIndex] === "AccountType"
+        for (
+          let keyIndex = 0;
+          keyIndex < payloadProperties.length;
+          keyIndex++
         ) {
-          res.status(401).json({
-            error: true,
-            message: "Trying to change restricted properties",
-          });
-          return;
+          if (
+            payloadProperties[keyIndex] === "password" ||
+            payloadProperties[keyIndex] === "AccountType"
+          ) {
+            res.status(401).json({
+              error: true,
+              message: "Trying to change restricted properties",
+            });
+            return;
+          }
+          usersList[index][payloadProperties[keyIndex]] =
+            userPayload[payloadProperties[keyIndex]];
         }
-        usersList[index][payloadProperties[keyIndex]] =
-          userPayload[payloadProperties[keyIndex]];
       }
+      res.json(usersList[index]);
+      break;
     }
-    res.status(500).send("Server error: ");
+  } catch (error) {
+    res.status(500).send("Server error: " + error);
   }
 };
 
