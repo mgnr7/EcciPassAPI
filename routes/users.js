@@ -30,6 +30,8 @@ router.route("/profile-details").post(profileDetails);
 
 router.route("/profile-update").patch(profileUpdate);
 
-router.route("/profile-delete").delete(profileDelete);
+router
+  .route("/profile-delete/:userId")
+  .delete([userIsAuthenticated], profileDelete);
 
 module.exports = router;
