@@ -28,7 +28,7 @@ router.route("/profile").get(userProfile);
 
 router.route("/profile-details").post(profileDetails);
 
-router.route("/profile-update").patch(profileUpdate);
+router.route("/profile-update").patch([userIsAuthenticated], profileUpdate);
 
 router
   .route("/profile-delete/:userId")
