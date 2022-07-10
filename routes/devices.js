@@ -8,7 +8,6 @@ const {
   deviceDetails,
   deviceDelete,
   deviceUpdateStatus,
-  registerDevice,
 } = require("../controllers/devices");
 
 const router = express.Router();
@@ -26,6 +25,6 @@ router
 router
   .route("/device-status-update")
   .patch([userIsAuthenticated], deviceUpdateStatus);
-router.route("/register-device").post([userIsAuthenticated], registerDevice);
+router.route("/register-device").post([userIsAuthenticated], createDevice);
 
 module.exports = router;
