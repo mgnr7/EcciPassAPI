@@ -25,6 +25,6 @@ router
 router
   .route("/device-status-update/:deviceId")
   .patch([userIsAuthenticated], deviceUpdateStatus);
-router.route("/register-device").post([userIsAuthenticated], createDevice);
+//router.route("/register-device").post([userIsAuthenticated], createDevice);
 
 module.exports = router;
