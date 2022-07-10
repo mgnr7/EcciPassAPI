@@ -14,7 +14,7 @@ const getTransporter = function () {
   return transporter;
 };
 
-exports.senRecoveryCodeEmail = async (userEmail, randomToken) => {
+exports.sendRecoveryCodeEmail = async (userEmail, randomToken) => {
   let transporter = getTransporter();
   await transporter.sendMail({
     from: "ci0137@psgfanclubcr.com",
