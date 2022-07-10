@@ -1,4 +1,3 @@
-/*
 let { usersList } = require("../utils/testData");
 let { userRoles } = require("../utils/testData");
 let { devicesList } = require("../utils/testData");
@@ -168,4 +167,3 @@ exports.deviceUpdateStatus = (req, res) => {
     }
   }
 };
-*/
