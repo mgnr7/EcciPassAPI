@@ -2,18 +2,40 @@ let { usersList } = require("../utils/testData");
 let { userRoles } = require("../utils/testData");
 let { devicesList } = require("../utils/testData");
 
+newDeviceId = () => {
+  deviceId = devicesList[devicesList.length - 1].deviceId;
+  deviceId += 1;
+  return deviceId;
+};
+
 exports.createDevice = (req, res) => {
   try {
     const productPayload = req.body;
-    const newDevice = Device.create({
-      brand: productPayload.brand,
-      model: productPayload.model,
-      serialNumber: productPayload.serialNumber,
-      activeType: productPayload.activeType,
-      activePicture: productPayload.activePicture,
-    });
+    const userPayload = req.user;
+
+    const userId = userPayload.userId;
+    const deviceId = newDeviceId();
+    const brand = productPayload.brand;
+    const model = productPayload.model;
+    const serialNumber = productPayload.serialNumber;
+    const deviceType = productPayload.deviceType;
+    const imageUrl = productPayload.imageUrl;
+    const state = productPayload.state;
+
+    const newDevice = {
+      userId,
+      deviceId,
+      brand,
+      model,
+      serialNumber,
+      deviceType,
+      imageUrl,
+      state,
+    };
+
+    devicesList.push(newDevice);
     res.json(newDevice);
-  } catch(error) {
+  } catch (error) {
     res.status(500).json({
       message: "Error al registrar activo",
       error,
@@ -114,5 +136,34 @@ exports.deviceDelete = (req, res) => {
   }
 };
 
-exports.deviceUpdateStatus = (req, res) => {};
-exports.registerDevice = (req, res) => {};
+exports.deviceUpdateStatus = (req, res) => {
+  const deviceId = parseInt(req.params.deviceId);
+  const devicePayload = req.body;
+  if (deviceId <= 0) {
+    res.status(404).json({
+      error: true,
+      message:
+        "The current device Id is not valid (device id: " + deviceId + ")",
+    });
+  } else {
+    try {
+      let device = false;
+      for (let index = 0; index < devicesList.length; index++) {
+        if (devicesList[index].deviceId === deviceId) {
+          devicesList[index].state = devicePayload.state;
+          device = true;
+          res.json(devicesList[index]);
+          break;
+        }
+      }
+      if (!device) {
+        res.status(404).json({
+          error: true,
+          message: "Device not found (device id: " + deviceId + ")",
+        });
+      }
+    } catch (error) {
+      res.status(500).send("Server error: " + error);
+    }
+  }
+};
