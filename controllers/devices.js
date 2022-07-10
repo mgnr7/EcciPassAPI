@@ -136,5 +136,34 @@ exports.deviceDelete = (req, res) => {
   }
 };
 
-exports.deviceUpdateStatus = (req, res) => {};
-exports.registerDevice = (req, res) => {};
+exports.deviceUpdateStatus = (req, res) => {
+  const deviceId = parseInt(req.params.deviceId);
+  const devicePayload = req.body;
+  if (deviceId <= 0) {
+    res.status(404).json({
+      error: true,
+      message:
+        "The current device Id is not valid (device id: " + deviceId + ")",
+    });
+  } else {
+    try {
+      let device = false;
+      for (let index = 0; index < devicesList.length; index++) {
+        if (devicesList[index].deviceId === deviceId) {
+          devicesList[index].state = devicePayload.state;
+          device = true;
+          res.json(devicesList[index]);
+          break;
+        }
+      }
+      if (!device) {
+        res.status(404).json({
+          error: true,
+          message: "Device not found (device id: " + deviceId + ")",
+        });
+      }
+    } catch (error) {
+      res.status(500).send("Server error: " + error);
+    }
+  }
+};

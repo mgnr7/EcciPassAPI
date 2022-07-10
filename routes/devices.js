@@ -23,7 +23,7 @@ router
   .route("/device-delete/:deviceId")
   .delete([userIsAuthenticated], deviceDelete);
 router
-  .route("/device-status-update")
+  .route("/device-status-update/:deviceId")
   .patch([userIsAuthenticated], deviceUpdateStatus);
 router.route("/register-device").post([userIsAuthenticated], createDevice);
 
