@@ -30,23 +30,30 @@ exports.createUser = (req, res) => {
     const id = userPayload.id;
     const email = userPayload.email;
     const userType = userPayload.userType;
-
-    /*
-    if (userType == "estudiante") {
-      const rolID = 3;
-    }
-    */
-
-    //const userPicture = userPayload.userPicture,
+    const imageUrl = userPayload.imageUrl;
+    const roleID = 3; //Usuario comun por default
 
     //Se guarda toda la info en un arreglo
-    const newUserInfo = {userId,username,password,name,apellido,id,email,userType};
-    //const newUsersRoles = {userId,rolID};
+    const newUserInfo = {
+      userId,
+      username,
+      password,
+      name,
+      apellido,
+      id,
+      email,
+      userType,
+      imageUrl,
+    };
+
+    const newUserRoles = {
+      userId,
+      roleID,
+    }
 
     usersList.push(newUserInfo);
-    //userRoles.push(newUsersRoles);
+    userRoles.push(newUserRoles);
     res.json(newUserInfo);
-
 
   } catch(error) {
     res.status(500).json({
