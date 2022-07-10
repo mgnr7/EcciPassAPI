@@ -22,12 +22,12 @@ exports.createUser = (req, res) => {
     const userPayload = req.body;
 
     //Info user
-    const userId = userPayload.id;
     const username = userPayload.username;
     const password = bcrypt.hash(userPayload.password, saltRounds);
     const name = userPayload.name;
     const apellido = userPayload.appellido;
     const id = userPayload.id;
+    const userId = id;
     const email = userPayload.email;
     const userType = userPayload.userType;
     const imageUrl = userPayload.imageUrl;
