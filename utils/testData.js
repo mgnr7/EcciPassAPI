@@ -116,7 +116,7 @@ let recoveryCodes = [
   {
     email: "andazo2501@gmail.com",
     code: 12345,
-  }
+  },
 ];
 
 module.exports = {
@@ -124,5 +124,5 @@ module.exports = {
   roles,
   userRoles,
   devicesList,
-  recoveryCodes
+  recoveryCodes,
 };
