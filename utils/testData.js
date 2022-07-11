@@ -8,7 +8,7 @@ let usersList = [
     lastName: "Perez",
     Carnet: "B62787",
     Identificacion: "123456789",
-    email: "andazo2501@gmail.com",
+    email: "EcciPass@gmail.com",
     AccountType: "estudiante",
   },
   {
